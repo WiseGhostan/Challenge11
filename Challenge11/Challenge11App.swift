@@ -18,7 +18,7 @@ struct Challenge11App: App {
         ])
         
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+        
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
@@ -26,27 +26,30 @@ struct Challenge11App: App {
         }
     }()
     
-   
-
+    @StateObject private var nav = routerService.shared
+    
     var body: some Scene {
         WindowGroup {
-            let interactor = HomeInteractor()
-            let router = HomeRouter()
-            let presenter = HomePresenter(interactor: interactor, router: router)
-            ContentView(presenter: presenter)
-                .navigationDestination(for: Route.self) { Route in
-                            switch Route {
-                            case .home:
-                                EmptyView()
-                            case .adicionar:
-                                addView()
-                            case .detail(let String):
-                                EmptyView()
-                            case .historico:
-                                EmptyView()
-                            }
-                }
-            
+            NavigationStack(path: $nav.path) {
+                let interactor = HomeInteractor()
+                let router = HomeRouter()
+                let presenter = HomePresenter(interactor: interactor, router: router)
+                ContentView(presenter: presenter)
+                
+                    .navigationDestination(for: Route.self) { Route in
+                        switch Route {
+                        case .home:
+                            ContentView(presenter: presenter)
+                        case .adicionar:
+                            addView()
+                        case .detail(let String):
+                            EmptyView()
+                        case .historico:
+                            EmptyView()
+                        }
+                    }
+                
+            }
         }
         
         .modelContainer(sharedModelContainer)

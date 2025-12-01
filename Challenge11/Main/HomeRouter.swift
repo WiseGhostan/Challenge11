@@ -2,36 +2,22 @@
 //  HomeRouter.swift
 //  Challenge11
 //
-//  Created by Wise on 28/11/25.
+//  Created by Wise on 01/12/25.
 //
 
-import Foundation
-import SwiftUI
-import Combine
-
-enum Route: Hashable, Codable {
-    case home
-    case historico
-    case adicionar
-    case detail(id: String)
+class HomeRouter: HomeRouterProtocol {
     
+    let RouterService: any RouterServiceProtocol = routerService.shared
     
-}
-
-final class HomeRouter: ObservableObject, HomeRouterProtocol {
-    
-    @Published var path = NavigationPath()
-    
-    func navigate(to destination: Route){
-        path.append(destination)
+    func navigateToDetail(with id: String) {
+        RouterService.navigate(to: .detail(id: id))
     }
     
-    func pop(){
-        path.removeLast()
+    func navigateToAdd() {
+        RouterService.navigate(to: .adicionar)
     }
     
-    func popToRoot(){
-        path.removeLast(path.count)
+    func pop() {
+        RouterService.pop()
     }
-    
 }

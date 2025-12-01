@@ -26,10 +26,15 @@ protocol HomeInteractorProtocol: AnyObject {
 }
 
 protocol HomeRouterProtocol: AnyObject {
-    var path:NavigationPath {get set}
-    func navigate(to destination: Route)
+    var RouterService: RouterServiceProtocol { get }
+    func navigateToDetail(with id: String)
+    func navigateToAdd()
     func pop()
-    func popToRoot()
+    
+//    var path:NavigationPath {get set}
+//    func navigate(to destination: Route)
+//    func pop()
+//    func popToRoot()
 }
 
 protocol HomeEntityProtocol: AnyObject {

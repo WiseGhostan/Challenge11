@@ -17,7 +17,20 @@ class HomePresenter: ObservableObject, HomePresenterProtoocol {
     
     @Published var isLoading: Bool = true
     
-    
+    func navigate(to: Route){
+        switch to {
+        case .adicionar:
+            router.navigateToAdd()
+        case .detail(let string):
+            router.navigateToDetail(with: string)
+        case .home:
+            print("Home")
+        case .historico:
+            print("Historico")
+        @unknown default:
+            break
+        }
+    }
     
     init(interactor: HomeInteractorProtocol, router: HomeRouterProtocol) {
         self.interactor = interactor

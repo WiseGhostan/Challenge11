@@ -20,7 +20,7 @@ struct ContentView: View {
     @State private var breakDuration = Duration.seconds(0)
     
     var body: some View {
-        NavigationStack(path: $presenter.router.path) {
+        
             VStack {
                 Text("\(focusDuration.formatted())")
                         .onReceive(timer) { input in
@@ -47,22 +47,23 @@ struct ContentView: View {
                 
                 
                 .toolbar {
-                    ToolbarItem() {
+                    
                         Button("+") {
-                            presenter.router.navigate(to: .adicionar)
+                            presenter.navigate(to: .adicionar)
                         }
 //                        NavigationLink(destination: Button("asd") {print(path)}) {
 //                            Image(systemName: "plus")
 //                        }
 //                        .buttonStyle(.glassProminent)
-                    }
+                    
                     
                 }
             }
+        
         }
         
     }
-}
+
 
 
 
