@@ -35,7 +35,6 @@ struct Challenge11App: App {
                 let router = HomeRouter()
                 let presenter = HomePresenter(interactor: interactor, router: router)
                 ContentView(presenter: presenter)
-                
                     .navigationDestination(for: Route.self) { Route in
                         switch Route {
                         case .home:
@@ -48,10 +47,30 @@ struct Challenge11App: App {
                             EmptyView()
                         }
                     }
+                    
                 
             }
         }
         
         .modelContainer(sharedModelContainer)
     }
+}
+
+#Preview {
+    let interactor = HomeInteractor()
+    let router = HomeRouter()
+    let presenter = HomePresenter(interactor: interactor, router: router)
+    ContentView(presenter: presenter)
+        .navigationDestination(for: Route.self) { Route in
+            switch Route {
+            case .home:
+                ContentView(presenter: presenter)
+            case .adicionar:
+                addView()
+            case .detail(let String):
+                EmptyView()
+            case .historico:
+                EmptyView()
+            }
+        }
 }
