@@ -19,27 +19,29 @@ struct ContentView: View {
     @State private var focusDuration = Duration.seconds(0)
     @State private var breakDuration = Duration.seconds(0)
     
+    @StateObject private var nav = routerService.shared
+    
     var body: some View {
-        
+        NavigationStack(path: $nav.path) {
             VStack {
                 Text("\(focusDuration.formatted())")
-                        .onReceive(timer) { input in
-                            focusDuration += Duration.seconds(1)
-                        }
-                        .font(.system(size: 64))
+                    .onReceive(timer) { input in
+                        focusDuration += Duration.seconds(1)
+                    }
+                    .font(.system(size: 64))
                 Text("\(breakDuration.formatted())")
-                        .onReceive(timer) { input in
-                            breakDuration += ((focusDuration.components.seconds % 3) == 0 && focusDuration.components.seconds != 0) ? Duration.seconds(1) : Duration.seconds(0)
-                        }
-                        .font(.system(size: 32))
-                    
+                    .onReceive(timer) { input in
+                        breakDuration += ((focusDuration.components.seconds % 3) == 0 && focusDuration.components.seconds != 0) ? Duration.seconds(1) : Duration.seconds(0)
+                    }
+                    .font(.system(size: 32))
+                
                 
                 
                 HStack{
                     Button {} label: {
                         Image(systemName: "pause.fill")
                     } .buttonStyle(.glass)
-                
+                    
                     Button(action: {}) {
                         Image(systemName: "play.fill")
                     } .buttonStyle(.glassProminent)
@@ -48,22 +50,22 @@ struct ContentView: View {
                 
                 .toolbar {
                     
-                        Button("+") {
-                            presenter.navigate(to: .adicionar)
-                        }
-//                        NavigationLink(destination: Button("asd") {print(path)}) {
-//                            Image(systemName: "plus")
-//                        }
-//                        .buttonStyle(.glassProminent)
+                    Button("+") {
+                        presenter.navigate(to: .adicionar)
+                    }
+                    //                        NavigationLink(destination: Button("asd") {print(path)}) {
+                    //                            Image(systemName: "plus")
+                    //                        }
+                    //                        .buttonStyle(.glassProminent)
                     
                     
                 }
             }
-        
+            
         }
         
     }
-
+}
 
 
 
