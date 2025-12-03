@@ -14,6 +14,7 @@ struct Challenge11App: App {
     //Config SwiftData
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
+            Activity.self,
             focusRegister.self,
         ])
         
@@ -22,7 +23,7 @@ struct Challenge11App: App {
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            fatalError("Could not create ModelContainer: \(error.localizedDescription)")
         }
     }()
     
@@ -40,7 +41,7 @@ struct Challenge11App: App {
                         case .home:
                             ContentView(presenter: presenter)
                         case .adicionar:
-                            addView()
+                            AddDayView()
                         case .detail(let String):
                             EmptyView()
                         case .historico:
@@ -56,21 +57,21 @@ struct Challenge11App: App {
     }
 }
 
-#Preview {
-    let interactor = HomeInteractor()
-    let router = HomeRouter()
-    let presenter = HomePresenter(interactor: interactor, router: router)
-    ContentView(presenter: presenter)
-        .navigationDestination(for: Route.self) { Route in
-            switch Route {
-            case .home:
-                ContentView(presenter: presenter)
-            case .adicionar:
-                addView()
-            case .detail(let String):
-                EmptyView()
-            case .historico:
-                EmptyView()
-            }
-        }
-}
+//#Preview {
+//    let interactor = HomeInteractor()
+//    let router = HomeRouter()
+//    let presenter = HomePresenter(interactor: interactor, router: router)
+//    ContentView(presenter: presenter)
+//        .navigationDestination(for: Route.self) { Route in
+//            switch Route {
+//            case .home:
+//                ContentView(presenter: presenter)
+//            case .adicionar:
+//                AddDayView()
+//            case .detail(let String):
+//                EmptyView()
+//            case .historico:
+//                EmptyView()
+//            }
+//        }
+//}
