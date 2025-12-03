@@ -10,18 +10,14 @@ import SwiftData
 
 @Model
 class focusRegister {
+    var focusTimers:[Duration] = []
+    var relaxTimers:[Duration] = []
     
-    @Attribute(.unique) var id:Int
-    var title: String
-    var date: Date = Date()
-    var isDone: Bool
-    var focusTimers:[Int] = []
-    var relaxTimers:[Int] = []
+    @Relationship(inverse: \Activity.timer)
+    var activity:Activity?
     
-    init(id: Int, title: String, isDone: Bool) {
-        self.id = id
-        self.title = title
-        self.isDone = isDone
+    init(){
+        
     }
     
 }

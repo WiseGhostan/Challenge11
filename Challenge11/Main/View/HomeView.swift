@@ -22,17 +22,11 @@ struct ContentView: View {
     @StateObject private var nav = routerService.shared
     
     var body: some View {
-        NavigationStack(path: $nav.path) {
+        NavigationStack() {
             VStack {
                 Text("\(focusDuration.formatted())")
-                    .onReceive(timer) { input in
-                        focusDuration += Duration.seconds(1)
-                    }
                     .font(.system(size: 64))
                 Text("\(breakDuration.formatted())")
-                    .onReceive(timer) { input in
-                        breakDuration += ((focusDuration.components.seconds % 3) == 0 && focusDuration.components.seconds != 0) ? Duration.seconds(1) : Duration.seconds(0)
-                    }
                     .font(.system(size: 32))
                 
                 
@@ -47,21 +41,38 @@ struct ContentView: View {
                     } .buttonStyle(.glassProminent)
                 }
                 
+                Divider()
                 
                 .toolbar {
                     
                     Button("+") {
                         presenter.navigate(to: .adicionar)
                     }
-                    //                        NavigationLink(destination: Button("asd") {print(path)}) {
-                    //                            Image(systemName: "plus")
-                    //                        }
-                    //                        .buttonStyle(.glassProminent)
-                    
                     
                 }
             }
             
+        }
+        .navigationDestination(for: Route.self) { Route in
+            switch Route {
+            case .home:
+                ContentView(presenter: presenter)
+            case .adicionar:
+                AddDayView()
+            case .detail(_):
+                EmptyView()
+            case .historico:
+                EmptyView()
+            }
+        }
+        .onReceive(timer) { input in
+            
+            focusDuration += Duration.seconds(1)
+            breakDuration += ((focusDuration.components.seconds % 3) == 0 && focusDuration.components.seconds != 0) ? Duration.seconds(1) : Duration.seconds(0)
+        }
+        
+        .onAppear {
+            presenter.viewDidLoad()
         }
         
     }
@@ -80,7 +91,7 @@ struct ContentView: View {
                     case .home:
                         EmptyView()
                     case .adicionar:
-                        addView()
+                        AddDayView()
                     case .detail(let String):
                         EmptyView()
                     case .historico:

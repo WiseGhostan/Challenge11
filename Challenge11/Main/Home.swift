@@ -17,9 +17,7 @@ protocol HomePresenterProtoocol: AnyObject {
 }
 
 protocol HomeInteractorProtocol: AnyObject {
-    var registro:focusRegister? {get set}
-    
-    func criarRegistro()
+    func criarRegistro(withName: String)
     func atualizarRegistro()
     func salvarRegistro()
     

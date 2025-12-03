@@ -14,8 +14,9 @@ class HomePresenter: ObservableObject, HomePresenterProtoocol {
     var interactor: HomeInteractorProtocol
     var router: HomeRouterProtocol
     
-    
     @Published var isLoading: Bool = true
+    
+    
     
     func navigate(to: Route){
         switch to {
