@@ -16,7 +16,10 @@ class HomePresenter: ObservableObject, HomePresenterProtoocol {
     
     @Published var isLoading: Bool = true
     
+    @Published var name: String = ""
     
+    @Published var focusDuration:Duration = Duration.seconds(1000)
+    @Published var breakDuration:Duration = Duration.seconds(1000)
     
     func navigate(to: Route){
         switch to {
@@ -38,8 +41,27 @@ class HomePresenter: ObservableObject, HomePresenterProtoocol {
         self.router = router
     }
     
+    func getActivity() {
+        guard let activity = interactor.activity else { return }
+        
+        let lastIndex = activity.timer.focusTimers.endIndex
+        focusDuration = activity.timer.focusTimers[lastIndex - 1]
+        breakDuration = activity.timer.relaxTimers[lastIndex - 1]
+    }
+    
+    func timerTick() {
+        interactor.timerTick()
+        guard let activity = interactor.activity else { return }
+        let lastIndex = activity.timer.focusTimers.endIndex
+        focusDuration = activity.timer.focusTimers[lastIndex - 1]
+        breakDuration = activity.timer.relaxTimers[lastIndex - 1]
+    }
+    
+    
     func viewDidLoad() {
+        let _ = interactor.getActivity()
         isLoading = false
+        
     }
 }
 

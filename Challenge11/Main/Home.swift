@@ -14,13 +14,23 @@ protocol HomeViewProtoocol: AnyObject {
 protocol HomePresenterProtoocol: AnyObject {
     var interactor: HomeInteractorProtocol { get set }
     var router: HomeRouterProtocol { get set }
+    
+    var isLoading:Bool { get set }
+    var name:String { get set }
+    
+    func viewDidLoad()
+    func timerTick()
 }
 
 protocol HomeInteractorProtocol: AnyObject {
-    func criarRegistro(withName: String)
+    var activity: Activity? { get set }
+    var manager:DataManager { get }
+    
+    func getActivity() -> Activity
+    func criarRegistro()
     func atualizarRegistro()
     func salvarRegistro()
-    
+    func timerTick()
 }
 
 protocol HomeRouterProtocol: AnyObject {
@@ -28,13 +38,9 @@ protocol HomeRouterProtocol: AnyObject {
     func navigateToDetail(with id: String)
     func navigateToAdd()
     func pop()
-    
-//    var path:NavigationPath {get set}
-//    func navigate(to destination: Route)
-//    func pop()
-//    func popToRoot()
 }
 
 protocol HomeEntityProtocol: AnyObject {
     
 }
+

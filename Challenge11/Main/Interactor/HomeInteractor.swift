@@ -14,16 +14,25 @@ class HomeInteractor: HomeInteractorProtocol {
     weak var presenter: HomePresenterProtoocol?
     
     var activity: Activity?
+    let manager = DataManager.shared
+
     
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     
-    func criarRegistro(withName: String) {
+    func criarRegistro() {
         activity?.timer.focusTimers.append(Duration.seconds(0))
         activity?.timer.relaxTimers.append(Duration.seconds(0))
-        
     }
     
+    func getActivity() -> Activity{
+        if manager.activities.isEmpty {
+            let novaAtividade = Activity(title: "Primeiro Pomodoro")
+            manager.activities.append(novaAtividade)
+        }
+        activity = manager.activities.last
+        print(activity as Any)
+        return activity!
+    }
     
     
     func atualizarRegistro() {
@@ -35,9 +44,14 @@ class HomeInteractor: HomeInteractorProtocol {
     }
     
     func timerTick() {
-        guard activity?.timer.focusTimers.isEmpty == false else { return }
-        guard activity?.timer.relaxTimers.isEmpty == false else { return }
+        guard let atividade = activity else { return }
+        guard atividade.timer.focusTimers.isEmpty == false else { return }
+        guard atividade.timer.relaxTimers.isEmpty == false else { return }
         
+        let lastIndex = atividade.timer.focusTimers.endIndex
+        atividade.timer.focusTimers[lastIndex - 1] += .seconds(1)
+        atividade.timer.relaxTimers[lastIndex - 1] += ((atividade.timer.focusTimers[lastIndex - 1].components.seconds % 3) == 0 && atividade.timer.focusTimers[lastIndex - 1].components.seconds != 0) ? .seconds(1) : .zero
+        print(manager.activities, manager.activities.last!.title, manager.activities.last!.timer.focusTimers)
     }
         
 }
