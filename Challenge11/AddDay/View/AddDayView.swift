@@ -1,7 +1,11 @@
 import SwiftUI
 import Foundation
+import Combine
 
 struct AddDayView: View, AddDayViewProtocol {
+    //Viper
+    @StateObject var presenter:AddDayPresenter
+    
     @State private var name: String = ""
     
     var body: some View {
@@ -17,7 +21,8 @@ struct AddDayView: View, AddDayViewProtocol {
                 .padding(.bottom, 20)
                 .frame(width: 250)
             Button("Adicionar atividade pomodoro"){
-                
+                presenter.addDay(withName: name)
+                presenter.pop()
             } .buttonStyle(.glassProminent)
         }
         

@@ -10,8 +10,8 @@ import SwiftData
 
 @Model
 class focusRegister {
-    var focusTimers:[Duration] = []
-    var relaxTimers:[Duration] = []
+    var focusTimers:[Duration] = [Duration.seconds(0)]
+    var relaxTimers:[Duration] = [Duration.seconds(0)]
     
     @Relationship(inverse: \Activity.timer)
     var activity:Activity?

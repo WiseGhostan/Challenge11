@@ -36,12 +36,19 @@ struct Challenge11App: App {
                 let router = HomeRouter()
                 let presenter = HomePresenter(interactor: interactor, router: router)
                 ContentView(presenter: presenter)
-                    .navigationDestination(for: Route.self) { Route in
-                        switch Route {
+                
+                
+                
+                // Router view builders
+                    .navigationDestination(for: Route.self) { route in
+                        switch route {
                         case .home:
                             ContentView(presenter: presenter)
                         case .adicionar:
-                            AddDayView()
+                            let addInteractor = AddDayInteractor()
+                            let addRouter = AddDayRouter()
+                            let addPresenter = AddDayPresenter(interactor: addInteractor, router: addRouter)
+                            AddDayView(presenter: addPresenter)
                         case .detail(let String):
                             EmptyView()
                         case .historico:

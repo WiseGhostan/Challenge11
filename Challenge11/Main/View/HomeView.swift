@@ -15,18 +15,16 @@ struct ContentView: View {
     //@EnvironmentObject private var router:HomeRouter
     //@State private var path = NavigationPath()
     
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @State private var focusDuration = Duration.seconds(0)
-    @State private var breakDuration = Duration.seconds(0)
+    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     @StateObject private var nav = routerService.shared
     
     var body: some View {
-        NavigationStack() {
+//        NavigationStack() {
             VStack {
-                Text("\(focusDuration.formatted())")
+                Text("\(presenter.focusDuration.formatted())")
                     .font(.system(size: 64))
-                Text("\(breakDuration.formatted())")
+                Text("\(presenter.breakDuration.formatted())")
                     .font(.system(size: 32))
                 
                 
@@ -45,34 +43,40 @@ struct ContentView: View {
                 
                 .toolbar {
                     
-                    Button("+") {
+                    Button {
                         presenter.navigate(to: .adicionar)
-                    }
+                    } label: {
+                        Image(systemName: "plus")
+                    } .buttonStyle(.glassProminent)
                     
                 }
             }
             
-        }
-        .navigationDestination(for: Route.self) { Route in
-            switch Route {
-            case .home:
-                ContentView(presenter: presenter)
-            case .adicionar:
-                AddDayView()
-            case .detail(_):
-                EmptyView()
-            case .historico:
-                EmptyView()
-            }
-        }
+//        }
+//        .navigationDestination(for: Route.self) { Route in
+//            switch Route {
+//            case .home:
+//                ContentView(presenter: presenter)
+//            case .adicionar:
+//                AddDayView()
+//            case .detail(_):
+//                EmptyView()
+//            case .historico:
+//                EmptyView()
+//            }
+//        }
         .onReceive(timer) { input in
-            
-            focusDuration += Duration.seconds(1)
-            breakDuration += ((focusDuration.components.seconds % 3) == 0 && focusDuration.components.seconds != 0) ? Duration.seconds(1) : Duration.seconds(0)
+            print("View tick")
+            presenter.timerTick()
+            presenter.getActivity()
         }
-        
+        .onDisappear{
+            timer.upstream.connect().cancel()
+        }
         .onAppear {
+            timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
             presenter.viewDidLoad()
+            presenter.getActivity()
         }
         
     }
@@ -86,17 +90,21 @@ struct ContentView: View {
     let router = HomeRouter()
     let presenter = HomePresenter(interactor: interactor, router: router)
     ContentView(presenter: presenter)
-        .navigationDestination(for: Route.self) { route in
-                    switch route {
-                    case .home:
-                        EmptyView()
-                    case .adicionar:
-                        AddDayView()
-                    case .detail(let String):
-                        EmptyView()
-                    case .historico:
-                        EmptyView()
-                    }
+        .navigationDestination(for: Route.self) { Route in
+            switch Route {
+            case .home:
+                ContentView(presenter: presenter)
+            case .adicionar:
+                let addInteractor = AddDayInteractor()
+                let addRouter = AddDayRouter()
+                let addPresenter = AddDayPresenter(interactor: addInteractor, router: addRouter)
+                AddDayView(presenter: addPresenter)
+            case .detail(let String):
+                EmptyView()
+            case .historico:
+                EmptyView()
+            }
         }
+    
 }
 
