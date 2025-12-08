@@ -9,8 +9,8 @@ class HomeRouter: HomeRouterProtocol {
     
     let RouterService: any RouterServiceProtocol = routerService.shared
     
-    func navigateToDetail(with id: String) {
-        RouterService.navigate(to: .detail(id: id))
+    func navigateToDetail(with atividade: Activity) {
+        RouterService.navigate(to: .detail(activity: atividade))
     }
     
     func navigateToAdd() {

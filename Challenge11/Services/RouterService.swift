@@ -9,11 +9,11 @@ import Foundation
 import SwiftUI
 import Combine
 
-enum Route: Hashable, Codable {
+enum Route: Hashable {
     case home
     case historico
     case adicionar
-    case detail(id: String)
+    case detail(activity: Activity)
 }
 
 protocol RouterServiceProtocol {

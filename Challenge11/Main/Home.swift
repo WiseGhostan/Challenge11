@@ -35,7 +35,7 @@ protocol HomeInteractorProtocol: AnyObject {
 
 protocol HomeRouterProtocol: AnyObject {
     var RouterService: RouterServiceProtocol { get }
-    func navigateToDetail(with id: String)
+    func navigateToDetail(with activity: Activity)
     func navigateToAdd()
     func pop()
 }
