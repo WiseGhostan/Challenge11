@@ -12,51 +12,64 @@ import Combine
 struct ContentView: View {
     // VIper
     @StateObject var presenter:HomePresenter
+    
     //@EnvironmentObject private var router:HomeRouter
     //@State private var path = NavigationPath()
+
+    @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @State var isPause:Bool = false
-    
-    @StateObject private var nav = routerService.shared
-    
-    var isAnimating:Bool = false
+    @State private var isOnBreak:Bool = false
+    @State private var isPaused:Bool = true
     
     var body: some View {
-        //        NavigationStack() {
-        
         VStack {
             Spacer()
             Text("\(presenter.focusDuration.formatted())")
-                .font(.system(size: 64))
-                .offset(x: isAnimating ? 200 : 0)
-                .animation(.easeInOut)
+                    .font(.system(size: isOnBreak ? 32 : 64))
+                    .offset(y: isOnBreak ? 76 : 0)
+                    .foregroundStyle(isOnBreak ? .gray : .purple)
+            
+                
+                
             Text("\(presenter.breakDuration.formatted())")
-                .font(.system(size: 32))
+                .font(.system(size: isOnBreak ? 64 : 32))
+                .offset(y: isOnBreak ? -38 : 0)
+                .foregroundStyle(isOnBreak ? .green : .blue)
             
             
             
             HStack{
-                Button {
-                    
-                } label: {
-                    Image(systemName: "stop.fill")
-                } .buttonStyle(.glass)
+//                Button {
+//                    withAnimation {
+//                        
+//                    }
+//                } label: {
+//                    Image(systemName: "stop.fill")
+//                } .buttonStyle(.glass)
                 
                 Button {
-                    if isPause {
-                        isPause.toggle()
-                        
-                    } else {
-                        isPause.toggle()
+                    withAnimation {
+                        if isPaused {
+                            isPaused.toggle()
+                            presenter.changeState() //seta para falso
+                        } else if !isOnBreak {
+                            isOnBreak.toggle()
+                            presenter.changeState() //Seta para True
+                        } else {
+                            isOnBreak.toggle()
+                            isPaused.toggle()
+                            presenter.newTimer()
+                        }
                     }
-                    
                 } label: {
-                    if isPause {
+                    if isPaused {
                         Image(systemName: "play.fill")
                     }
-                    else {
+                    else if !isOnBreak {
                         Image(systemName: "pause.fill")
+                    }
+                    else {
+                        Image(systemName: "memories")
                     }
                 } .buttonStyle(.glassProminent)
             }
@@ -90,7 +103,6 @@ struct ContentView: View {
         }
         
         .toolbar {
-            
             Button {
                 presenter.navigate(to: .adicionar)
             } label: {
@@ -99,10 +111,10 @@ struct ContentView: View {
             
         } .onReceive(timer) { input in
             print("View tick")
-            if !isPause {
+            if !isPaused{
                 presenter.timerTick()
-                presenter.getActivity()
             }
+            
         }
         .onDisappear{
             timer.upstream.connect().cancel()
@@ -110,26 +122,11 @@ struct ContentView: View {
         .onAppear {
             timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
             presenter.viewDidLoad()
-            presenter.getActivity()
-            
         }
-    }
-    
-    //        }
-    //        .navigationDestination(for: Route.self) { Route in
-    //            switch Route {
-    //            case .home:
-    //                ContentView(presenter: presenter)
-    //            case .adicionar:
-    //                AddDayView()
-    //            case .detail(_):
-    //                EmptyView()
-    //            case .historico:
-    //                EmptyView()
-    //            }
-    //        }
+        .navigationTitle(presenter.name)
         
-    
+        
+    }
 }
 
 

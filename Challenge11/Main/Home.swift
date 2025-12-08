@@ -17,6 +17,10 @@ protocol HomePresenterProtoocol: AnyObject {
     
     var isLoading:Bool { get set }
     var name:String { get set }
+    var isOnBreak:Bool { get set }
+    
+    var focusDuration:Duration { get set }
+    var breakDuration:Duration { get set }
     
     func viewDidLoad()
     func timerTick()
@@ -25,6 +29,8 @@ protocol HomePresenterProtoocol: AnyObject {
 protocol HomeInteractorProtocol: AnyObject {
     var activity: Activity? { get set }
     var manager:DataManager { get }
+    var presenter: HomePresenterProtoocol? { get set }
+
     
     func getActivity() -> Activity
     func criarRegistro()
