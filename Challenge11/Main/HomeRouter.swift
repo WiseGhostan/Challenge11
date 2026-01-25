@@ -9,36 +9,18 @@ import Foundation
 import SwiftUI
 import Combine
 
-enum Route: Hashable {
+enum Route: Hashable, Codable {
     case home
     case historico
     case adicionar
-    case detail(activity: Activity)
-}
-
-protocol RouterServiceProtocol {
+    case detail(id: String)
     
-    var path: NavigationPath { get set }
-    
-    func navigate(to destination: Route)
-    func pop()
-    func popToRoot()
     
 }
 
-
-final class routerService: ObservableObject, RouterServiceProtocol {
-    
-    static let shared = {
-        let instance = routerService()
-        return instance
-    }()
+final class HomeRouter: ObservableObject, HomeRouterProtocol {
     
     @Published var path = NavigationPath()
-    
-    private init(){
-        
-    }
     
     func navigate(to destination: Route){
         path.append(destination)
